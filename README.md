@@ -7,6 +7,8 @@
 
 The most comprehensive Python wrapper for the **HappyHorse 1.0 API** (developed by Alibaba's Taotian Group), delivered via [muapi.ai](https://muapi.ai). Generate cinematic, native 1080p AI videos with integrated audio from text prompts and static images — currently **ranked #1 on the Artificial Analysis Video Arena**.
 
+Join subreddit [HappyHorseAI](https://www.reddit.com/r/HappyHorseAI_) for discussion
+
 > 🌊 **Also explore these top AI video models:**
 > - 🎬 [Seedance 2.0 API](https://github.com/Anil-matcha/Seedance-2.0-API) — ByteDance's cinematic 2K model with character sheets, omni-reference & video edit
 > - 🎥 [Veo 4 API](https://github.com/Anil-matcha/Veo-4-API) — Google DeepMind's native 4K model with audio, character consistency & camera controls
