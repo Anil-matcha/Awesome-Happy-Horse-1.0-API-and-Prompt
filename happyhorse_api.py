@@ -6,11 +6,27 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 
+# Supported aspect ratios on HappyHorse 1.0 (matches the muapi schema).
+SUPPORTED_ASPECT_RATIOS = ("16:9", "9:16", "1:1", "4:3", "3:4")
+MIN_DURATION = 4
+MAX_DURATION = 15
+
+
 class HappyHorseAPI:
+    """HappyHorse 1.0 API client for muapi.ai.
+
+    NOTE: HappyHorse 1.0 on muapi is currently in a closed playground beta.
+    API-key access will return 403 until it goes GA; Pro- or Business-plan
+    users can try it today inside the muapi playground. See the project
+    README for details.
+    """
+
     def __init__(self, api_key=None):
         """
         Initialize the HappyHorse 1.0 API client.
-        :param api_key: Your MuAPI.ai API key. Defaults to MUAPI_API_KEY environment variable.
+
+        :param api_key: Your muapi.ai API key. Defaults to the MUAPI_API_KEY
+                        environment variable.
         """
         self.api_key = api_key or os.getenv("MUAPI_API_KEY")
         if not self.api_key:
@@ -19,130 +35,63 @@ class HappyHorseAPI:
         self.base_url = "https://api.muapi.ai/api/v1"
         self.headers = {
             "x-api-key": self.api_key,
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
         }
 
-    def text_to_video(self, prompt, aspect_ratio="16:9", duration=10, quality="1080p", with_audio=False):
-        """
-        Submits a HappyHorse 1.0 Text-to-Video (T2V) generation task.
+    @staticmethod
+    def _validate_common(aspect_ratio, duration):
+        if aspect_ratio not in SUPPORTED_ASPECT_RATIOS:
+            raise ValueError(
+                f"aspect_ratio must be one of {SUPPORTED_ASPECT_RATIOS}, got {aspect_ratio!r}"
+            )
+        if not (MIN_DURATION <= int(duration) <= MAX_DURATION):
+            raise ValueError(
+                f"duration must be between {MIN_DURATION} and {MAX_DURATION} seconds, got {duration}"
+            )
 
-        HappyHorse 1.0 generates native 1080p HD video with a single 40-layer
-        Transformer (15B parameters). Audio can be generated jointly in one pass
-        by setting with_audio=True.
+    def text_to_video(self, prompt, aspect_ratio="16:9", duration=5):
+        """
+        Submit a HappyHorse 1.0 Text-to-Video (T2V) task.
+
+        Output is always native 1080p HD. Returns {"request_id": ..., "status":
+        "processing"}; poll with get_result / wait_for_completion.
 
         :param prompt: The text prompt describing the video.
-        :param aspect_ratio: Video aspect ratio (e.g., '16:9', '9:16', '1:1').
-        :param duration: Video duration in seconds (default 10).
-        :param quality: Output quality ('1080p' or '4k').
-        :param with_audio: Whether to generate audio alongside the video in a single pass.
+        :param aspect_ratio: One of '16:9', '9:16', '1:1', '4:3', '3:4'.
+        :param duration: Video duration in seconds (4-15, default 5).
         :return: JSON response with request_id.
         """
-        endpoint = f"{self.base_url}/happyhorse-1.0-t2v"
-        if with_audio:
-            endpoint = f"{self.base_url}/happyhorse-1.0-t2v-audio"
+        self._validate_common(aspect_ratio, duration)
+        endpoint = f"{self.base_url}/happy-horse-1-text-to-video-1080p"
         payload = {
             "prompt": prompt,
             "aspect_ratio": aspect_ratio,
-            "duration": duration,
-            "quality": quality,
+            "duration": int(duration),
         }
         return self._post_request(endpoint, payload)
 
-    def image_to_video(self, prompt, images_list, aspect_ratio="16:9", duration=10, quality="1080p", with_audio=False):
+    def image_to_video(self, prompt, images_list, aspect_ratio="16:9", duration=5):
         """
-        Submits a HappyHorse 1.0 Image-to-Video (I2V) generation task.
+        Submit a HappyHorse 1.0 Image-to-Video (I2V) task.
 
-        Animate one or more static images into a video. Reference images in the
-        prompt using @image1, @image2, etc.
+        The first URL in images_list is used as the start frame; the generated
+        clip animates outward from it. Output is always native 1080p HD.
 
-        :param prompt: Text prompt to guide the animation. Reference images with
-                       @image1, @image2, etc.
-        :param images_list: A list of image URLs to animate.
-        :param aspect_ratio: Video aspect ratio.
-        :param duration: Video duration in seconds.
-        :param quality: Output quality ('1080p' or '4k').
-        :param with_audio: Whether to generate audio alongside the video.
+        :param prompt: Optional text prompt guiding the motion (can be empty).
+        :param images_list: Single-element list with the start-frame image URL.
+        :param aspect_ratio: One of '16:9', '9:16', '1:1', '4:3', '3:4'.
+        :param duration: Video duration in seconds (4-15, default 5).
         :return: JSON response with request_id.
         """
-        endpoint = f"{self.base_url}/happyhorse-1.0-i2v"
-        if with_audio:
-            endpoint = f"{self.base_url}/happyhorse-1.0-i2v-audio"
+        self._validate_common(aspect_ratio, duration)
+        if not images_list:
+            raise ValueError("images_list must contain the start-frame image URL.")
+        endpoint = f"{self.base_url}/happy-horse-1-image-to-video-1080p"
         payload = {
-            "prompt": prompt,
-            "images_list": images_list,
+            "prompt": prompt or "",
+            "images_list": list(images_list)[:1],
             "aspect_ratio": aspect_ratio,
-            "duration": duration,
-            "quality": quality,
-        }
-        return self._post_request(endpoint, payload)
-
-    def text_to_video_with_audio(self, prompt, aspect_ratio="16:9", duration=10, quality="1080p"):
-        """
-        Submits a HappyHorse 1.0 Text-to-Video with integrated audio generation.
-
-        HappyHorse jointly generates video and audio in a single Transformer
-        forward pass — no separate audio pipeline needed.
-
-        :param prompt: The text prompt describing the scene (include audio cues,
-                       e.g. 'rain pattering', 'crowd cheering' for richer audio).
-        :param aspect_ratio: Video aspect ratio.
-        :param duration: Video duration in seconds.
-        :param quality: Output quality ('1080p' or '4k').
-        :return: JSON response with request_id.
-        """
-        return self.text_to_video(prompt, aspect_ratio, duration, quality, with_audio=True)
-
-    def image_to_video_with_audio(self, prompt, images_list, aspect_ratio="16:9", duration=10, quality="1080p"):
-        """
-        Submits a HappyHorse 1.0 Image-to-Video with integrated audio generation.
-
-        :param prompt: Text prompt guiding animation. Include ambient sound cues for
-                       richer audio. Reference images with @image1, @image2, etc.
-        :param images_list: List of image URLs to animate.
-        :param aspect_ratio: Video aspect ratio.
-        :param duration: Video duration in seconds.
-        :param quality: Output quality ('1080p' or '4k').
-        :return: JSON response with request_id.
-        """
-        return self.image_to_video(prompt, images_list, aspect_ratio, duration, quality, with_audio=True)
-
-    def extend_video(self, request_id, prompt="", duration=10, quality="1080p"):
-        """
-        Extends a previously generated HappyHorse 1.0 video.
-
-        :param request_id: The request_id of the video segment to extend.
-        :param prompt: Optional text prompt to guide the continuation.
-        :param duration: Seconds to extend by.
-        :param quality: Output quality ('1080p' or '4k').
-        :return: JSON response with request_id.
-        """
-        endpoint = f"{self.base_url}/happyhorse-1.0-extend"
-        payload = {
-            "request_id": request_id,
-            "prompt": prompt,
-            "duration": duration,
-            "quality": quality,
-        }
-        return self._post_request(endpoint, payload)
-
-    def video_edit(self, prompt, video_urls, images_list=None, aspect_ratio="16:9", quality="1080p"):
-        """
-        Edits an existing video using natural language with HappyHorse 1.0.
-
-        :param prompt: Describe the desired edits.
-        :param video_urls: List of video URLs to edit.
-        :param images_list: Optional list of reference image URLs.
-        :param aspect_ratio: Output video aspect ratio.
-        :param quality: Output quality ('1080p' or '4k').
-        :return: JSON response with request_id.
-        """
-        endpoint = f"{self.base_url}/happyhorse-1.0-video-edit"
-        payload = {
-            "prompt": prompt,
-            "video_urls": video_urls,
-            "images_list": images_list or [],
-            "aspect_ratio": aspect_ratio,
-            "quality": quality,
+            "duration": int(duration),
         }
         return self._post_request(endpoint, payload)
 
@@ -153,15 +102,13 @@ class HappyHorseAPI:
 
     def upload_file(self, file_path):
         """
-        Uploads a local file (image or video) to MuAPI for use in generation tasks.
+        Upload a local file (image or video) to muapi for use in generation tasks.
 
         :param file_path: Path to the local file to upload.
         :return: JSON response containing the URL of the uploaded file.
         """
         endpoint = f"{self.base_url}/upload_file"
-        headers = {
-            "x-api-key": self.api_key
-        }
+        headers = {"x-api-key": self.api_key}
         with open(file_path, "rb") as file_data:
             files = {"file": file_data}
             response = requests.post(endpoint, headers=headers, files=files)
@@ -170,7 +117,7 @@ class HappyHorseAPI:
 
     def get_result(self, request_id):
         """
-        Polls for the result of a HappyHorse generation task.
+        Poll for the result of a HappyHorse generation task.
 
         :param request_id: The request_id returned from a generation call.
         :return: JSON response with status and outputs.
@@ -182,12 +129,12 @@ class HappyHorseAPI:
 
     def wait_for_completion(self, request_id, poll_interval=5, timeout=600):
         """
-        Blocks until a HappyHorse generation task completes and returns the result.
+        Block until a HappyHorse generation task completes and return the result.
 
         :param request_id: The request_id returned from a generation call.
         :param poll_interval: Seconds between status polls (default 5).
         :param timeout: Maximum seconds to wait before raising TimeoutError (default 600).
-        :return: Completed result JSON with 'outputs' list.
+        :return: Completed result JSON with an 'outputs' list (muapi-hosted video URLs).
         """
         start_time = time.time()
         while time.time() - start_time < timeout:
@@ -206,10 +153,9 @@ class HappyHorseAPI:
 
 
 if __name__ == "__main__":
-    # Example usage for T2V
     try:
         api = HappyHorseAPI()
-        prompt = "A cinematic aerial shot of a coastal city at golden hour, waves crashing, 1080p"
+        prompt = "A cinematic aerial shot of a coastal city at golden hour, waves crashing against cliffs, birds flying"
 
         print(f"Submitting T2V task with prompt: {prompt}")
         submission = api.text_to_video(prompt=prompt, duration=10)
