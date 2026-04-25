@@ -8,6 +8,7 @@ load_dotenv()
 
 # Supported aspect ratios on HappyHorse 1.0 (matches the muapi schema).
 SUPPORTED_ASPECT_RATIOS = ("16:9", "9:16", "1:1", "4:3", "3:4")
+SUPPORTED_RESOLUTIONS = ("1080p", "720p")
 MIN_DURATION = 4
 MAX_DURATION = 15
 
@@ -39,7 +40,7 @@ class HappyHorseAPI:
         }
 
     @staticmethod
-    def _validate_common(aspect_ratio, duration):
+    def _validate_common(aspect_ratio, duration, resolution):
         if aspect_ratio not in SUPPORTED_ASPECT_RATIOS:
             raise ValueError(
                 f"aspect_ratio must be one of {SUPPORTED_ASPECT_RATIOS}, got {aspect_ratio!r}"
@@ -48,21 +49,26 @@ class HappyHorseAPI:
             raise ValueError(
                 f"duration must be between {MIN_DURATION} and {MAX_DURATION} seconds, got {duration}"
             )
+        if resolution not in SUPPORTED_RESOLUTIONS:
+            raise ValueError(
+                f"resolution must be one of {SUPPORTED_RESOLUTIONS}, got {resolution!r}"
+            )
 
-    def text_to_video(self, prompt, aspect_ratio="16:9", duration=5):
+    def text_to_video(self, prompt, aspect_ratio="16:9", duration=5, resolution="1080p"):
         """
         Submit a HappyHorse 1.0 Text-to-Video (T2V) task.
 
-        Output is always native 1080p HD. Returns {"request_id": ..., "status":
-        "processing"}; poll with get_result / wait_for_completion.
+        Returns {"request_id": ..., "status": "processing"}; poll with get_result /
+        wait_for_completion. Choose `resolution="720p"` for ~half the cost of 1080p.
 
         :param prompt: The text prompt describing the video.
         :param aspect_ratio: One of '16:9', '9:16', '1:1', '4:3', '3:4'.
         :param duration: Video duration in seconds (4-15, default 5).
+        :param resolution: '1080p' (default) or '720p'. 720p costs ~half of 1080p.
         :return: JSON response with request_id.
         """
-        self._validate_common(aspect_ratio, duration)
-        endpoint = f"{self.base_url}/happy-horse-1-text-to-video-1080p"
+        self._validate_common(aspect_ratio, duration, resolution)
+        endpoint = f"{self.base_url}/happy-horse-1-text-to-video-{resolution}"
         payload = {
             "prompt": prompt,
             "aspect_ratio": aspect_ratio,
@@ -70,23 +76,25 @@ class HappyHorseAPI:
         }
         return self._post_request(endpoint, payload)
 
-    def image_to_video(self, prompt, images_list, aspect_ratio="16:9", duration=5):
+    def image_to_video(self, prompt, images_list, aspect_ratio="16:9", duration=5, resolution="1080p"):
         """
         Submit a HappyHorse 1.0 Image-to-Video (I2V) task.
 
         The first URL in images_list is used as the start frame; the generated
-        clip animates outward from it. Output is always native 1080p HD.
+        clip animates outward from it. Choose `resolution="720p"` for ~half the
+        cost of 1080p.
 
         :param prompt: Optional text prompt guiding the motion (can be empty).
         :param images_list: Single-element list with the start-frame image URL.
         :param aspect_ratio: One of '16:9', '9:16', '1:1', '4:3', '3:4'.
         :param duration: Video duration in seconds (4-15, default 5).
+        :param resolution: '1080p' (default) or '720p'.
         :return: JSON response with request_id.
         """
-        self._validate_common(aspect_ratio, duration)
+        self._validate_common(aspect_ratio, duration, resolution)
         if not images_list:
             raise ValueError("images_list must contain the start-frame image URL.")
-        endpoint = f"{self.base_url}/happy-horse-1-image-to-video-1080p"
+        endpoint = f"{self.base_url}/happy-horse-1-image-to-video-{resolution}"
         payload = {
             "prompt": prompt or "",
             "images_list": list(images_list)[:1],

@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.7+](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
 
-A curated Python wrapper **and prompt library** for the **HappyHorse 1.0 API** (developed by Alibaba's Taotian Group), delivered via [muapi.ai](https://muapi.ai). Generate cinematic native-1080p AI videos from text prompts and static images — currently the **#1 ranked AI video generation model** — and use the bundled prompt pack of high-performing community examples to get great output on the first try.
+A curated Python wrapper **and prompt library** for the **HappyHorse 1.0 API** (developed by Alibaba's Taotian Group), delivered via [muapi.ai](https://muapi.ai). Generate cinematic AI videos from text prompts and static images — currently the **#1 ranked AI video generation model** — at native 1080p HD or the cheaper 720p tier (~half price), and use the bundled prompt pack of high-performing community examples to get great output on the first try.
 
 Join subreddit [HappyHorseAI](https://www.reddit.com/r/HappyHorseAI_) for discussion.
 
@@ -50,16 +50,19 @@ HappyHorse 1.0 is Alibaba's state-of-the-art AI video generation model, built by
 
 - **#1 Ranked**: 1333 Elo in T2V, 1392 Elo in I2V — surpassing every competitor in public benchmarks.
 - **Native 1080p HD**: Full HD output without upscaling, powered by a 15B-parameter 40-layer Transformer architecture.
+- **720p tier**: same model, ~half the cost — pick `resolution="720p"` when you don't need full HD.
 - **Blazing Fast**: ~10 seconds average generation time, one of the fastest available models.
 - **Developer-First**: Simple Python SDK via [MuAPI](https://muapi.ai) infrastructure.
 
 ## 🌟 Key Features of HappyHorse 1.0 API
 
-- ✅ **Text-to-Video (T2V)** — `POST /api/v1/happy-horse-1-text-to-video-1080p`. Turn a prompt into a 1080p clip.
-- ✅ **Image-to-Video (I2V)** — `POST /api/v1/happy-horse-1-image-to-video-1080p`. Animate a starting image into a 1080p clip.
+- ✅ **Text-to-Video (T2V) — 1080p** — `POST /api/v1/happy-horse-1-text-to-video-1080p`.
+- ✅ **Text-to-Video (T2V) — 720p** — `POST /api/v1/happy-horse-1-text-to-video-720p` (~half the 1080p cost).
+- ✅ **Image-to-Video (I2V) — 1080p** — `POST /api/v1/happy-horse-1-image-to-video-1080p`.
+- ✅ **Image-to-Video (I2V) — 720p** — `POST /api/v1/happy-horse-1-image-to-video-720p` (~half the 1080p cost).
 - ✅ **Flexible Aspect Ratios**: `16:9`, `9:16` (TikTok/Reels), `1:1`, `4:3`, `3:4`.
 - ✅ **Duration**: 4–15 seconds per clip.
-- ✅ **Fixed 1080p output** with Full HD quality on every request.
+- ✅ **Two output tiers**: native 1080p HD or budget-friendly 720p.
 
 ---
 
@@ -113,12 +116,13 @@ from happyhorse_api import HappyHorseAPI
 # Initialize the HappyHorse 1.0 client
 api = HappyHorseAPI()
 
-# 1. Generate Video from Text (T2V)
+# 1. Generate Video from Text (T2V) — 1080p (default)
 print("Generating AI Video using HappyHorse 1.0...")
 submission = api.text_to_video(
     prompt="A cinematic aerial shot of a coastal city at golden hour, waves crashing against cliffs, birds flying",
     aspect_ratio="16:9",
     duration=10,
+    # resolution="720p",   # uncomment to halve the cost at 720p
 )
 
 # 2. Wait for completion
@@ -135,7 +139,7 @@ print(f"Success! View your HappyHorse 1.0 video here: {result['outputs'][0]}")
 
 All responses return `{"request_id": "<id>", "status": "processing"}`; poll `GET /api/v1/predictions/{request_id}/result` until `status` is `completed` and read `outputs[0]` for the final muapi-hosted video URL.
 
-### 1. HappyHorse 1.0 Text-to-Video (1080p)
+### 1. HappyHorse 1.0 Text-to-Video — 1080p
 **Endpoint**: `POST https://api.muapi.ai/api/v1/happy-horse-1-text-to-video-1080p`
 
 | Field | Type | Required | Default | Notes |
@@ -156,7 +160,23 @@ curl --location --request POST "https://api.muapi.ai/api/v1/happy-horse-1-text-t
   }'
 ```
 
-### 2. HappyHorse 1.0 Image-to-Video (1080p)
+### 2. HappyHorse 1.0 Text-to-Video — 720p
+**Endpoint**: `POST https://api.muapi.ai/api/v1/happy-horse-1-text-to-video-720p`
+
+Identical request body to the 1080p endpoint above. Output resolution is encoded in the URL — costs ~half of the 1080p tier (see [Pricing](#-pricing)).
+
+```bash
+curl --location --request POST "https://api.muapi.ai/api/v1/happy-horse-1-text-to-video-720p" \
+  --header "Content-Type: application/json" \
+  --header "x-api-key: YOUR_API_KEY" \
+  --data-raw '{
+      "prompt": "A majestic eagle soaring over snow-capped mountains at sunrise",
+      "aspect_ratio": "16:9",
+      "duration": 10
+  }'
+```
+
+### 3. HappyHorse 1.0 Image-to-Video — 1080p
 **Endpoint**: `POST https://api.muapi.ai/api/v1/happy-horse-1-image-to-video-1080p`
 
 The first image in `images_list` is used as the start frame and the generated clip animates outward from it.
@@ -181,12 +201,29 @@ curl --location --request POST "https://api.muapi.ai/api/v1/happy-horse-1-image-
   }'
 ```
 
-### 3. Poll a prediction
+### 4. HappyHorse 1.0 Image-to-Video — 720p
+**Endpoint**: `POST https://api.muapi.ai/api/v1/happy-horse-1-image-to-video-720p`
+
+Same body as the 1080p I2V endpoint; cheaper 720p output.
+
+```bash
+curl --location --request POST "https://api.muapi.ai/api/v1/happy-horse-1-image-to-video-720p" \
+  --header "Content-Type: application/json" \
+  --header "x-api-key: YOUR_API_KEY" \
+  --data-raw '{
+      "prompt": "The clouds drift slowly, light shifts from golden to dusk",
+      "images_list": ["https://example.com/landscape.jpg"],
+      "aspect_ratio": "16:9",
+      "duration": 10
+  }'
+```
+
+### 5. Poll a prediction
 **Endpoint**: `GET https://api.muapi.ai/api/v1/predictions/{request_id}/result`
 
 Returns the muapi standard prediction envelope — `status` transitions through `queued` → `processing` → `completed` (or `failed`). On completion the `outputs` array contains muapi-hosted video URLs; the top-level `video` key mirrors `outputs[0]` for convenience.
 
-### 4. Upload a local file
+### 6. Upload a local file
 **Endpoint**: `POST https://api.muapi.ai/api/v1/upload_file`
 
 Multipart-form helper to host a local image on muapi so it can be referenced in `images_list`.
@@ -197,8 +234,8 @@ Multipart-form helper to host a local image on muapi so it can be referenced in 
 
 | Method | Parameters | Description |
 | :--- | :--- | :--- |
-| `text_to_video` | `prompt`, `aspect_ratio`, `duration` | Generate a native 1080p clip from text. |
-| `image_to_video` | `prompt`, `images_list`, `aspect_ratio`, `duration` | Animate a starting image into a 1080p clip. |
+| `text_to_video` | `prompt`, `aspect_ratio`, `duration`, `resolution` | Generate a clip from text. `resolution` defaults to `"1080p"`; pass `"720p"` to halve the cost. |
+| `image_to_video` | `prompt`, `images_list`, `aspect_ratio`, `duration`, `resolution` | Animate a starting image. `resolution` defaults to `"1080p"`; `"720p"` available. |
 | `upload_file` | `file_path` | Upload a local file (image or video) to MuAPI and get back its hosted URL. |
 | `get_result` | `request_id` | Check task status and retrieve outputs. |
 | `wait_for_completion` | `request_id`, `poll_interval`, `timeout` | Blocking helper — polls until generation completes. |
@@ -207,11 +244,12 @@ Multipart-form helper to host a local image on muapi so it can be referenced in 
 
 ## 💰 Pricing
 
-HappyHorse 1.0 bills flat per-second at 1080p:
+HappyHorse 1.0 bills flat per-second. 720p costs half of 1080p:
 
 | Output | Rate | 5 s clip | 10 s clip | 15 s clip |
 | :--- | :--- | :--- | :--- | :--- |
 | 1080p | **$0.5625 / sec** | $2.81 | $5.63 | $8.44 |
+| 720p | **$0.28125 / sec** | $1.41 | $2.81 | $4.22 |
 
 Pricing shown here matches the live cost-strategy on muapi.
 
@@ -219,7 +257,7 @@ Pricing shown here matches the live cost-strategy on muapi.
 
 ## 🎨 Prompt Library
 
-A curated pack of high-performing community prompts for HappyHorse 1.0, organized by use case. Drop any of these directly into `text_to_video(...)` or the `/happy-horse-1-text-to-video-1080p` endpoint. Prompts are adapted from the [ZeroLu/awesome-happy-horse](https://github.com/ZeroLu/awesome-happy-horse) collection (CC BY 4.0).
+A curated pack of high-performing prompts for HappyHorse 1.0, organized by use case. Drop any of these directly into `text_to_video(...)` or the `/happy-horse-1-text-to-video-{1080p,720p}` endpoints.
 
 ### 🎬 Film & Cinematic Storytelling
 
@@ -276,11 +314,9 @@ A massive "CONGRATULATIONS GRADUATES" banner being unfurled across a university 
 ## 🔗 Official Resources
 - **API Provider**: [MuAPI.ai](https://muapi.ai) — get your `MUAPI_API_KEY` and access the playground here
 - **Upgrade plan**: [muapi.ai/topup#plans](https://muapi.ai/topup#plans) — Pro ($20/mo) or Business ($100/mo) unlocks early access to new models including Happy Horse 1.0
-- **Prompt Attribution**: Community prompts in the library above are adapted from [ZeroLu/awesome-happy-horse](https://github.com/ZeroLu/awesome-happy-horse) (CC BY 4.0).
 
 ## 📄 License
-The Python wrapper is MIT licensed — see the [LICENSE](LICENSE) file.
-Prompt text in the [Prompt Library](#-prompt-library) is adapted from [ZeroLu/awesome-happy-horse](https://github.com/ZeroLu/awesome-happy-horse), licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+MIT — see the [LICENSE](LICENSE) file.
 
 ---
 
