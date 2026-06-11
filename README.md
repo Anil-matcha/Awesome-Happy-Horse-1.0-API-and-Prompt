@@ -55,3 +55,7 @@ Succeeding the basic SFX of 2.6, Wan 2.7 generates **Spatial Binaural Audio** th
 
 ---
 *Disclaimer: Wan 2.7 is the latest iteration of the Wan series by Alibaba Cloud. This repository serves as a knowledge hub and documentation for the model's capabilities and implementation.*
+
+## Related Projects
+
+- [Awesome Claude Fable 5](https://github.com/Anil-matcha/awesome-claude-fable-5) — Curated real-world use cases, tutorials, and benchmarks for Claude Fable 5 — access exclusively via MuAPI
