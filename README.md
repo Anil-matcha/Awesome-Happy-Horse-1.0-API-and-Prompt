@@ -1,61 +1,443 @@
-# Wan 2.7: The Next Generation Video Foundation Model
+# Awesome HappyHorse 1.0 — API & Prompts
 
-**Wan 2.7** represents the cutting-edge evolution in Alibaba Cloud's video generation series, succeeding the professional-grade **Wan 2.6**. 
+[![Awesome](https://awesome.re/badge.svg)](https://github.com/sindresorhus/awesome)
+[![PyPI version](https://img.shields.io/pypi/v/happyhorse-1-api.svg)](https://pypi.org/project/happyhorse-1-api/)
+[![GitHub stars](https://img.shields.io/github/stars/Anil-matcha/Awesome-HappyHorse-1.0-API-and-Prompt.svg)](https://github.com/Anil-matcha/Awesome-HappyHorse-1.0-API-and-Prompt/stargazers)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.7+](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
 
-Building upon the "Reference-to-Video" (R2V) and native audio-visual synchronization of its predecessor, Wan 2.7 pushes the boundaries of cinematic AI, long-form storytelling, and visual consistency.
+A curated Python wrapper **and prompt library** for the **HappyHorse 1.0 API** (developed by Alibaba's Taotian Group), delivered via [muapi.ai](https://muapi.ai). Generate cinematic AI videos from text prompts and static images — currently the **#1 ranked AI video generation model** — at native 1080p HD or the cheaper 720p tier (~half price), and use the bundled prompt pack of high-performing community examples to get great output on the first try.
 
----
+Join subreddit [HappyHorseAI](https://www.reddit.com/r/HappyHorseAI_) for discussion.
 
-## Evolution: From Wan 2.6 to Wan 2.7
+Try for free [ArenaAI](https://arena.ai/video).
 
-### Previous Model: Wan 2.6 (Late 2025)
-Wan 2.6 was a major milestone that moved beyond simple clips to professional-grade production:
-- **Reference-to-Video (R2V):** Enabled "clone-level" character consistency by uploading a reference video, maintaining appearance and motion patterns.
-- **Smart Multi-Shot Storytelling:** Automated the generation of multi-angle scenes (panoramic, close-ups, tracking shots) within a single 15-second 1080p clip.
-- **Native AV Sync:** First in the series to offer native lip-syncing and synchronized environmental sound effects (SFX) that match on-screen motion.
-- **Dual-Subject Interaction:** Supported high-fidelity interaction between up to two distinct characters.
-
-### Next Generation: Wan 2.7 (Early 2026 Roadmap)
-Wan 2.7 refines the core architecture of 2.6, focusing on scaling, endurance, and granular control:
-
-#### 1. Extended Narrative Windows (30s - 60s)
-While Wan 2.6 capped at 15 seconds, Wan 2.7 is engineered for extended durations, targeting **30 to 60 seconds** of continuous, high-fidelity video in a single generation pass without losing temporal coherence.
-
-#### 2. Global Character Embedding & Persistence
-Beyond 2.6's R2V, Wan 2.7 introduces **Persistent Character VAEs**, allowing the model to "memorize" character features across an entire project. This enables full-length AI filmmaking with a consistent cast across separate scenes.
-
-#### 3. Instruction-Based Video Editing
-Wan 2.7 moves from simple generation to **dynamic editing**. It supports natural language instructions to modify existing footage (e.g., *"Change the lighting to sunset"* or *"Add a futuristic helmet to the character"*), preserving the original motion and structure while altering specific elements.
-
-#### 4. Advanced Physical Simulation (v4)
-The updated **Wan-VAE v4** significantly improves the simulation of complex physics, including realistic fluid dynamics (water, fire), cloth physics, and high-speed motion blur without the "warping" artifacts seen in earlier diffusion models.
-
-#### 5. Full Binaural Audio Synthesis
-Succeeding the basic SFX of 2.6, Wan 2.7 generates **Spatial Binaural Audio** that dynamically shifts based on the camera's position and the movement of objects in the scene.
+> 🌊 **Also explore these top AI video models:**
+> - 🎬 [Seedance 2.0 API](https://github.com/Anil-matcha/Seedance-2.0-API) — ByteDance's cinematic 2K model with character sheets, omni-reference & video edit
+> - 🎥 [Veo 4 API](https://github.com/Anil-matcha/Veo-4-API) — Google DeepMind's native 4K model with audio, character consistency & camera controls
 
 ---
 
-## Comparison Summary
-| Feature | Wan 2.6 | Wan 2.7 (Target) |
+## ⚠️ Access requirements
+
+- 💳 **Pro or Business plan required.** Free-plan users get `403 { "detail": "Happy Horse 1.0 is available only on the Pro and Business plans. Upgrade at https://muapi.ai/topup#plans." }`
+- 🎨 Use Happy Horse today directly inside the [muapi playground](https://muapi.ai) on a Pro ($20/mo) or Business ($100/mo) plan. Early access to new models is a paid-plan perk.
+
+The Python SDK and MCP server in this repo mirror the final public surface so you can wire them up now; they'll start succeeding the moment the API goes GA.
+
+---
+
+## 📚 Contents
+
+- [Why HappyHorse 1.0](#-why-use-happyhorse-10-api)
+- [Key Features](#-key-features-of-happyhorse-10-api)
+- [Installation](#-installation)
+- [MCP Server](#-happyhorse-10-mcp-server)
+- [Quick Start (Python)](#-quick-start-with-happyhorse-10-api-python)
+- [API Endpoints & Reference](#-api-endpoints--reference)
+- [API Method Reference](#-api-method-reference)
+- [Pricing](#-pricing)
+- [Prompt Library](#-prompt-library) ← popular community prompts
+- [Official Resources](#-official-resources)
+- [License](#-license)
+
+## 🚀 Why Use HappyHorse 1.0 API?
+
+HappyHorse 1.0 is Alibaba's state-of-the-art AI video generation model, built by the Future Life Lab team at Taotian Group. It debuted anonymously on April 7, 2026, instantly claiming the top spot in both Text-to-Video and Image-to-Video public benchmarks.
+
+- **#1 Ranked**: 1333 Elo in T2V, 1392 Elo in I2V — surpassing every competitor in public benchmarks.
+- **Native 1080p HD**: Full HD output without upscaling, powered by a 15B-parameter 40-layer Transformer architecture.
+- **720p tier**: same model, ~half the cost — pick `resolution="720p"` when you don't need full HD.
+- **Blazing Fast**: ~10 seconds average generation time, one of the fastest available models.
+- **Developer-First**: Simple Python SDK via [MuAPI](https://muapi.ai) infrastructure.
+
+## 🌟 Key Features of HappyHorse 1.0 API
+
+- ✅ **Text-to-Video (T2V) — 1080p** — `POST /api/v1/happy-horse-1-text-to-video-1080p`.
+- ✅ **Text-to-Video (T2V) — 720p** — `POST /api/v1/happy-horse-1-text-to-video-720p` (~half the 1080p cost).
+- ✅ **Image-to-Video (I2V) — 1080p** — `POST /api/v1/happy-horse-1-image-to-video-1080p`.
+- ✅ **Image-to-Video (I2V) — 720p** — `POST /api/v1/happy-horse-1-image-to-video-720p` (~half the 1080p cost).
+- ✅ **Reference-to-Video (Ref2V) — 1080p / 720p** — `POST /api/v1/happy-horse-1-reference-to-video-{1080p|720p}`. Generate a video from a text prompt + **1–9 reference images** (style, subject, environment) — different from I2V's single start frame.
+- ✅ **Video Edit — 1080p / 720p** — `POST /api/v1/happy-horse-1-video-edit-{1080p|720p}`. Edit an existing video with a natural-language instruction; optionally anchor 0–5 reference images, keep or regenerate the audio track.
+- ✅ **Flexible Aspect Ratios**: `16:9`, `9:16` (TikTok/Reels), `1:1`, `4:3`, `3:4`.
+- ✅ **Duration**: 4–15 seconds per clip.
+- ✅ **Two output tiers**: native 1080p HD or budget-friendly 720p.
+
+---
+
+## 🛠 Installation
+
+### Via Pip (Recommended)
+```bash
+pip install happyhorse-1-api
+```
+
+### From Source
+```bash
+# Clone the HappyHorse 1.0 API repository
+git clone https://github.com/Anil-matcha/Awesome-HappyHorse-1.0-API-and-Prompt.git
+cd Awesome-HappyHorse-1.0-API-and-Prompt
+
+# Install required dependencies
+pip install -r requirements.txt
+```
+
+### Configuration
+Create a `.env` file in the root directory and add your [MuAPI](https://muapi.ai) API key:
+```env
+MUAPI_API_KEY=your_muapi_api_key_here
+```
+
+---
+
+## 🤖 HappyHorse 1.0 MCP Server
+
+Use HappyHorse 1.0 as an **MCP (Model Context Protocol)** server, allowing AI assistants like Claude Desktop or Cursor to directly invoke HappyHorse generation tools.
+
+### Running the MCP Server
+1. Ensure `MUAPI_API_KEY` is set in your environment.
+2. Run the server:
+   ```bash
+   python3 mcp_server.py
+   ```
+3. To test with the MCP Inspector:
+   ```bash
+   npx -y @modelcontextprotocol/inspector python3 mcp_server.py
+   ```
+
+---
+
+## 💻 Quick Start with HappyHorse 1.0 API (Python)
+
+```python
+from happyhorse_api import HappyHorseAPI
+
+# Initialize the HappyHorse 1.0 client
+api = HappyHorseAPI()
+
+# 1. Generate Video from Text (T2V) — 1080p (default)
+print("Generating AI Video using HappyHorse 1.0...")
+submission = api.text_to_video(
+    prompt="A cinematic aerial shot of a coastal city at golden hour, waves crashing against cliffs, birds flying",
+    aspect_ratio="16:9",
+    duration=10,
+    # resolution="720p",   # uncomment to halve the cost at 720p
+)
+
+# 2. Wait for completion
+result = api.wait_for_completion(submission['request_id'])
+print(f"Success! View your HappyHorse 1.0 video here: {result['outputs'][0]}")
+
+# 3. Reference-to-Video — generate from a prompt + up to 9 reference images
+ref_submission = api.reference_to_video(
+    prompt="The same character walks through a rainy neon-lit Tokyo alley at night",
+    images_list=[
+        "https://example.com/character_front.jpg",
+        "https://example.com/character_profile.jpg",
+        "https://example.com/style_neon_alley.jpg",
+    ],
+    aspect_ratio="9:16",
+    duration=8,
+)
+ref_result = api.wait_for_completion(ref_submission["request_id"])
+print(f"Reference-to-video output: {ref_result['outputs'][0]}")
+
+# 4. Video Edit — edit an existing video with a natural-language instruction
+edit_submission = api.video_edit(
+    prompt="Replace the daytime sky with a stormy sunset and add lightning flashes",
+    video_url="https://example.com/source_clip.mp4",
+    audio_setting="origin",   # keep the original audio; use "auto" to regenerate
+)
+edit_result = api.wait_for_completion(edit_submission["request_id"])
+print(f"Video-edit output: {edit_result['outputs'][0]}")
+```
+
+---
+
+## 📡 API Endpoints & Reference
+
+**Base URL**: `https://api.muapi.ai/api/v1`
+**Auth**: `x-api-key: <YOUR_API_KEY>` (API-key access is currently in closed beta — see the note at the top of the README)
+
+All responses return `{"request_id": "<id>", "status": "processing"}`; poll `GET /api/v1/predictions/{request_id}/result` until `status` is `completed` and read `outputs[0]` for the final muapi-hosted video URL.
+
+### 1. HappyHorse 1.0 Text-to-Video — 1080p
+**Endpoint**: `POST https://api.muapi.ai/api/v1/happy-horse-1-text-to-video-1080p`
+
+| Field | Type | Required | Default | Notes |
+| :--- | :--- | :--- | :--- | :--- |
+| `prompt` | string | yes | — | Scene description. |
+| `aspect_ratio` | enum | no | `"16:9"` | One of `16:9`, `9:16`, `1:1`, `4:3`, `3:4`. |
+| `duration` | int | no | `5` | Integer seconds, `4 <= duration <= 15`. |
+| `webhook_url` | URL | no | — | Optional — a `POST` is fired to this URL on completion. |
+
+```bash
+curl --location --request POST "https://api.muapi.ai/api/v1/happy-horse-1-text-to-video-1080p" \
+  --header "Content-Type: application/json" \
+  --header "x-api-key: YOUR_API_KEY" \
+  --data-raw '{
+      "prompt": "A majestic eagle soaring over snow-capped mountains at sunrise",
+      "aspect_ratio": "16:9",
+      "duration": 10
+  }'
+```
+
+### 2. HappyHorse 1.0 Text-to-Video — 720p
+**Endpoint**: `POST https://api.muapi.ai/api/v1/happy-horse-1-text-to-video-720p`
+
+Identical request body to the 1080p endpoint above. Output resolution is encoded in the URL — costs ~half of the 1080p tier (see [Pricing](#-pricing)).
+
+```bash
+curl --location --request POST "https://api.muapi.ai/api/v1/happy-horse-1-text-to-video-720p" \
+  --header "Content-Type: application/json" \
+  --header "x-api-key: YOUR_API_KEY" \
+  --data-raw '{
+      "prompt": "A majestic eagle soaring over snow-capped mountains at sunrise",
+      "aspect_ratio": "16:9",
+      "duration": 10
+  }'
+```
+
+### 3. HappyHorse 1.0 Image-to-Video — 1080p
+**Endpoint**: `POST https://api.muapi.ai/api/v1/happy-horse-1-image-to-video-1080p`
+
+The first image in `images_list` is used as the start frame and the generated clip animates outward from it.
+
+| Field | Type | Required | Default | Notes |
+| :--- | :--- | :--- | :--- | :--- |
+| `prompt` | string | no | `""` | Optional — guides motion direction/mood. |
+| `images_list` | string[] | yes | — | Single-element list: the start-frame image URL. |
+| `aspect_ratio` | enum | no | `"16:9"` | Same set as above. Output is cropped/padded if ratio differs from the input image. |
+| `duration` | int | no | `5` | `4 <= duration <= 15`. |
+| `webhook_url` | URL | no | — | Optional completion webhook. |
+
+```bash
+curl --location --request POST "https://api.muapi.ai/api/v1/happy-horse-1-image-to-video-1080p" \
+  --header "Content-Type: application/json" \
+  --header "x-api-key: YOUR_API_KEY" \
+  --data-raw '{
+      "prompt": "The clouds drift slowly, light shifts from golden to dusk",
+      "images_list": ["https://example.com/landscape.jpg"],
+      "aspect_ratio": "16:9",
+      "duration": 10
+  }'
+```
+
+### 4. HappyHorse 1.0 Image-to-Video — 720p
+**Endpoint**: `POST https://api.muapi.ai/api/v1/happy-horse-1-image-to-video-720p`
+
+Same body as the 1080p I2V endpoint; cheaper 720p output.
+
+```bash
+curl --location --request POST "https://api.muapi.ai/api/v1/happy-horse-1-image-to-video-720p" \
+  --header "Content-Type: application/json" \
+  --header "x-api-key: YOUR_API_KEY" \
+  --data-raw '{
+      "prompt": "The clouds drift slowly, light shifts from golden to dusk",
+      "images_list": ["https://example.com/landscape.jpg"],
+      "aspect_ratio": "16:9",
+      "duration": 10
+  }'
+```
+
+### 5. HappyHorse 1.0 Reference-to-Video — 1080p
+**Endpoint**: `POST https://api.muapi.ai/api/v1/happy-horse-1-reference-to-video-1080p`
+
+Generate a video from a text prompt and **1–9 reference images**. Each image is treated as a *style/subject reference* (character, environment, look) — this is different from I2V, which uses a single image as the start frame.
+
+| Field | Type | Required | Default | Notes |
+| :--- | :--- | :--- | :--- | :--- |
+| `prompt` | string | yes | — | Text description of the desired video. |
+| `images_list` | string[] | yes | — | 1–9 reference image URLs. JPEG/PNG/WEBP, ≥400 px shortest side, ≤10 MB each. |
+| `aspect_ratio` | enum | no | `"16:9"` | One of `16:9`, `9:16`, `1:1`, `4:3`, `3:4`. |
+| `duration` | int | no | `5` | Integer seconds, `4 <= duration <= 15`. |
+| `seed` | int | no | — | Optional seed (0–2147483647) for reproducibility. |
+| `webhook_url` | URL | no | — | Optional completion webhook. |
+
+```bash
+curl --location --request POST "https://api.muapi.ai/api/v1/happy-horse-1-reference-to-video-1080p" \
+  --header "Content-Type: application/json" \
+  --header "x-api-key: YOUR_API_KEY" \
+  --data-raw '{
+      "prompt": "The same character walks through a rainy neon-lit Tokyo alley at night",
+      "images_list": [
+          "https://example.com/character_front.jpg",
+          "https://example.com/character_profile.jpg",
+          "https://example.com/style_neon_alley.jpg"
+      ],
+      "aspect_ratio": "9:16",
+      "duration": 8
+  }'
+```
+
+### 6. HappyHorse 1.0 Reference-to-Video — 720p
+**Endpoint**: `POST https://api.muapi.ai/api/v1/happy-horse-1-reference-to-video-720p`
+
+Identical request body to the 1080p reference-to-video endpoint; cheaper 720p output.
+
+```bash
+curl --location --request POST "https://api.muapi.ai/api/v1/happy-horse-1-reference-to-video-720p" \
+  --header "Content-Type: application/json" \
+  --header "x-api-key: YOUR_API_KEY" \
+  --data-raw '{
+      "prompt": "The same character walks through a rainy neon-lit Tokyo alley at night",
+      "images_list": [
+          "https://example.com/character_front.jpg",
+          "https://example.com/style_neon_alley.jpg"
+      ],
+      "aspect_ratio": "9:16",
+      "duration": 8
+  }'
+```
+
+### 7. HappyHorse 1.0 Video Edit — 1080p
+**Endpoint**: `POST https://api.muapi.ai/api/v1/happy-horse-1-video-edit-1080p`
+
+Edit an existing video with a natural-language instruction. Optionally supply 0–5 reference images to anchor the look/characters/objects that should appear in the edited output, and choose whether to regenerate the audio (`auto`) or keep the original audio track (`origin`).
+
+| Field | Type | Required | Default | Notes |
+| :--- | :--- | :--- | :--- | :--- |
+| `prompt` | string | yes | — | Edit instruction describing the change to apply. |
+| `video_url` | URL | yes | — | Source video URL. MP4 or MOV (H.264 recommended), 3–60 s, ≤100 MB, longer side ≤2160 px, shorter side ≥320 px, frame rate >8 fps. |
+| `images_list` | string[] | no | `null` | 0–5 optional reference image URLs. JPEG/PNG/WEBP, ≥300 px each side, ≤10 MB each. |
+| `audio_setting` | enum | no | `"auto"` | `"auto"` regenerates audio to match the edit; `"origin"` keeps the source audio track. |
+| `seed` | int | no | — | Optional seed (0–2147483647) for reproducibility. |
+| `webhook_url` | URL | no | — | Optional completion webhook. |
+
+```bash
+curl --location --request POST "https://api.muapi.ai/api/v1/happy-horse-1-video-edit-1080p" \
+  --header "Content-Type: application/json" \
+  --header "x-api-key: YOUR_API_KEY" \
+  --data-raw '{
+      "prompt": "Replace the daytime sky with a stormy sunset and add lightning flashes",
+      "video_url": "https://example.com/source_clip.mp4",
+      "audio_setting": "origin"
+  }'
+```
+
+### 8. HappyHorse 1.0 Video Edit — 720p
+**Endpoint**: `POST https://api.muapi.ai/api/v1/happy-horse-1-video-edit-720p`
+
+Same body as the 1080p video-edit endpoint; cheaper 720p output.
+
+```bash
+curl --location --request POST "https://api.muapi.ai/api/v1/happy-horse-1-video-edit-720p" \
+  --header "Content-Type: application/json" \
+  --header "x-api-key: YOUR_API_KEY" \
+  --data-raw '{
+      "prompt": "Restyle the entire clip as a 1990s anime cel-shaded look",
+      "video_url": "https://example.com/source_clip.mp4",
+      "images_list": ["https://example.com/anime_style_ref.jpg"],
+      "audio_setting": "auto"
+  }'
+```
+
+### 9. Poll a prediction
+**Endpoint**: `GET https://api.muapi.ai/api/v1/predictions/{request_id}/result`
+
+Returns the muapi standard prediction envelope — `status` transitions through `queued` → `processing` → `completed` (or `failed`). On completion the `outputs` array contains muapi-hosted video URLs; the top-level `video` key mirrors `outputs[0]` for convenience.
+
+### 10. Upload a local file
+**Endpoint**: `POST https://api.muapi.ai/api/v1/upload_file`
+
+Multipart-form helper to host a local image on muapi so it can be referenced in `images_list`.
+
+---
+
+## 📖 API Method Reference
+
+| Method | Parameters | Description |
 | :--- | :--- | :--- |
-| **Max Duration** | 15 Seconds | 30 - 60 Seconds |
-| **Resolution** | 1080p @ 24fps | 1080p / 4K Upscaling |
-| **Consistency** | R2V (Reference-based) | Global Persistent Embeddings |
-| **Audio** | Native Lip-Sync & SFX | Full Binaural Spatial Audio |
-| **Editing** | Static Inpainting | Dynamic Instruction-based Editing |
-| **License** | Apache 2.0 (Open Weights) | Apache 2.0 (Open Weights) |
+| `text_to_video` | `prompt`, `aspect_ratio`, `duration`, `resolution` | Generate a clip from text. `resolution` defaults to `"1080p"`; pass `"720p"` to halve the cost. |
+| `image_to_video` | `prompt`, `images_list`, `aspect_ratio`, `duration`, `resolution` | Animate a starting image. `resolution` defaults to `"1080p"`; `"720p"` available. |
+| `reference_to_video` | `prompt`, `images_list`, `aspect_ratio`, `duration`, `resolution`, `seed` | Generate a clip from a prompt + 1–9 reference images (style/subject/environment). |
+| `video_edit` | `prompt`, `video_url`, `images_list`, `audio_setting`, `resolution`, `seed` | Edit an existing video with a natural-language instruction; 0–5 optional reference images; keep or regenerate audio. |
+| `upload_file` | `file_path` | Upload a local file (image or video) to MuAPI and get back its hosted URL. |
+| `get_result` | `request_id` | Check task status and retrieve outputs. |
+| `wait_for_completion` | `request_id`, `poll_interval`, `timeout` | Blocking helper — polls until generation completes. |
 
 ---
 
-## Use Cases
-- **AI-Driven Cinema:** Creating consistent, long-form narrative content with a persistent cast.
-- **Professional Marketing:** Generating 4K-ready advertisements with perfect product and character consistency.
-- **Social Media Storytelling:** Rapid production of multi-shot, audio-synced content for TikTok and YouTube.
-- **Immersive Education:** Visualizing historical or scientific events with spatial audio and realistic physics.
+## 💰 Pricing
+
+HappyHorse 1.0 bills flat per-second. 720p costs half of 1080p across every endpoint. Reference-to-Video and Video Edit price slightly above plain T2V/I2V because they consume more reference / video conditioning.
+
+| Endpoint | Output | Rate | 5 s clip | 10 s clip | 15 s clip |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| Text-to-Video / Image-to-Video | 1080p | **$0.5625 / sec** | $2.81 | $5.63 | $8.44 |
+| Text-to-Video / Image-to-Video | 720p | **$0.28125 / sec** | $1.41 | $2.81 | $4.22 |
+| Reference-to-Video | 1080p | **$0.65625 / sec** | $3.28 | $6.56 | $9.84 |
+| Reference-to-Video | 720p | **$0.328125 / sec** | $1.64 | $3.28 | $4.92 |
+| Video Edit | 1080p | **$0.65625 / sec** | $3.28 | $6.56 | $9.84 |
+| Video Edit | 720p | **$0.328125 / sec** | $1.64 | $3.28 | $4.92 |
+
+Pricing shown here matches the live cost-strategy on muapi.
 
 ---
-*Disclaimer: Wan 2.7 is the latest iteration of the Wan series by Alibaba Cloud. This repository serves as a knowledge hub and documentation for the model's capabilities and implementation.*
 
-## Related Projects
+## 🎨 Prompt Library
 
-- [Awesome Claude Fable 5](https://github.com/Anil-matcha/awesome-claude-fable-5) — Curated real-world use cases, tutorials, and benchmarks for Claude Fable 5 — access exclusively via MuAPI
+A curated pack of high-performing prompts for HappyHorse 1.0, organized by use case. Drop any of these directly into `text_to_video(...)` or the `/happy-horse-1-text-to-video-{1080p,720p}` endpoints.
+
+### 🎬 Film & Cinematic Storytelling
+
+**Cave Flashlight Cinematic**
+```text
+A flashlight beam exploring a cave system, illuminating wet limestone formations. The light catches crystalline calcite deposits that glitter and flash. Where the beam passes through shallow standing water, it creates bright caustic patterns on the submerged floor. Stalactites cast long, swinging shadows as the flashlight moves.
+```
+
+**Flower Time-Lapse Continuity**
+```text
+A flower blooming and wilting over two weeks, one photo per day. Same vase, same window, same angle. Light changes with weather.
+```
+
+**Tracking Shot Street Escape**
+```text
+TRACKING SHOT follows her from behind as she runs through the street. Sari fabric flows and trails behind her, catching the wind. CLOSE-UP on bare feet hitting the ground. Fabric billowing. She glances back. Keeps running. Determined.
+```
+
+### 🛍️ Advertising & Product Storytelling
+
+**Voice Assistant Day-In-The-Life**
+```text
+A time-lapse of a family using a home voice assistant throughout the day. From setting morning alarms, playing music, checking the weather, and controlling smart lights, the product integrates seamlessly into their daily life.
+```
+
+### 🎨 Animation & Stylized Visuals
+
+**1990s Action Cartoon Firebending**
+```text
+1990s action cartoon style. A young martial artist performs a firebending kata. The flames are hand-drawn with thick outlines and bold orange-yellow gradients. Dynamic camera swoops around the character. The fighting stance shows anime influence while maintaining Western animation proportions. Smoke effects use the signature layered look of the era.
+```
+
+**Cyberpunk Android Repair Bay**
+```text
+Cyberpunk anime style. A female android sits in a maintenance chair as robotic arms repair her damaged arm. The skin panel is open, revealing intricate servos and fiber-optic cables beneath. Her eyes are blank and unfocused during the repair cycle. Neon city lights filter through rain-streaked windows. Cool blue and pink color palette with high contrast shadows.
+```
+
+### 📱 Social, Viral & UGC-Style Concepts
+
+**Graduation Banner Chaos**
+```text
+A massive "CONGRATULATIONS GRADUATES" banner being unfurled across a university building by maintenance workers on the roof. The wind catches it mid-unfurl, turning it into a sail that nearly lifts one worker off their feet. Coworkers grab him, everyone laughs, and the banner finally drops into place. Below, students start taking selfies immediately.
+```
+
+### 💡 Prompt Engineering Tips for HappyHorse 1.0
+
+- **Name the shot.** Tokens like `TRACKING SHOT`, `CLOSE-UP`, `WIDE ANGLE`, `TIME-LAPSE` meaningfully change camera behavior.
+- **Specify the style bucket.** `1990s action cartoon style`, `cyberpunk anime style`, `cinematic 35mm film` — style tokens front-load the aesthetic.
+- **Keep motion concrete.** "Wind catches it mid-unfurl" beats "it moves dramatically."
+- **For I2V, describe the motion, not the subject.** The image already provides the subject — the prompt should describe what changes.
+
+---
+
+## 🔗 Official Resources
+- **API Provider**: [MuAPI.ai](https://muapi.ai) — get your `MUAPI_API_KEY` and access the playground here
+- **Upgrade plan**: [muapi.ai/topup#plans](https://muapi.ai/topup#plans) — Pro ($20/mo) or Business ($100/mo) unlocks early access to new models including Happy Horse 1.0
+
+## 📄 License
+MIT — see the [LICENSE](LICENSE) file.
+
+---
+
+**Keywords**: HappyHorse 1.0 API, Awesome HappyHorse 1.0, HappyHorse 1.0 Prompts, Alibaba HappyHorse, AI Video Generator, Text-to-Video AI, Image-to-Video API, Reference-to-Video API, Video Edit API, HappyHorse Python SDK, Alibaba Video AI, MuAPI, Video Generation API, Native 1080p AI Video, AI Video Creation, HappyHorse API Documentation, HappyHorse I2V, HappyHorse T2V, HappyHorse Ref2V, HappyHorse Video Edit, AI Movie Generator, Python Video API, HappyHorse Tutorial, #1 AI Video Model.
