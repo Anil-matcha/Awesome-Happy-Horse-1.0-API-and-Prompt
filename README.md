@@ -1,4 +1,4 @@
-# Awesome HappyHorse 1.0 — API & Prompts
+# Awesome HappyHorse 1.0 and Happy Horse 1.1 — API & Prompts
 
 [![Awesome](https://awesome.re/badge.svg)](https://github.com/sindresorhus/awesome)
 [![PyPI version](https://img.shields.io/pypi/v/happyhorse-1-api.svg)](https://pypi.org/project/happyhorse-1-api/)
@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.7+](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
 
-A curated Python wrapper **and prompt library** for the **HappyHorse 1.0 API** (developed by Alibaba's Taotian Group), delivered via [muapi.ai](https://muapi.ai). Generate cinematic AI videos from text prompts and static images — currently the **#1 ranked AI video generation model** — at native 1080p HD or the cheaper 720p tier (~half price), and use the bundled prompt pack of high-performing community examples to get great output on the first try.
+A curated Python wrapper **and prompt library** for the **HappyHorse 1.0 and Happy Horse 1.1 API** (developed by Alibaba's Taotian Group), delivered via [muapi.ai](https://muapi.ai). Generate cinematic AI videos from text prompts and static images — currently the **#1 ranked AI video generation model** — at native 1080p HD or the cheaper 720p tier (~half price), and use the bundled prompt pack of high-performing community examples to get great output on the first try.
 
 Join subreddit [HappyHorseAI](https://www.reddit.com/r/HappyHorseAI_) for discussion.
 
@@ -19,9 +19,6 @@ Try for free [ArenaAI](https://arena.ai/video).
 ---
 
 ## ⚠️ Access requirements
-
-- 💳 **Pro or Business plan required.** Free-plan users get `403 { "detail": "Happy Horse 1.0 is available only on the Pro and Business plans. Upgrade at https://muapi.ai/topup#plans." }`
-- 🎨 Use Happy Horse today directly inside the [muapi playground](https://muapi.ai) on a Pro ($20/mo) or Business ($100/mo) plan. Early access to new models is a paid-plan perk.
 
 The Python SDK and MCP server in this repo mirror the final public surface so you can wire them up now; they'll start succeeding the moment the API goes GA.
 
@@ -41,7 +38,7 @@ The Python SDK and MCP server in this repo mirror the final public surface so yo
 - [Official Resources](#-official-resources)
 - [License](#-license)
 
-## 🚀 Why Use HappyHorse 1.0 API?
+## 🚀 Why Use HappyHorse 1.0 and Happy Horse 1.1 API?
 
 HappyHorse 1.0 is Alibaba's state-of-the-art AI video generation model, built by the Future Life Lab team at Taotian Group. It debuted anonymously on April 7, 2026, instantly claiming the top spot in both Text-to-Video and Image-to-Video public benchmarks.
 
@@ -51,7 +48,7 @@ HappyHorse 1.0 is Alibaba's state-of-the-art AI video generation model, built by
 - **Blazing Fast**: ~10 seconds average generation time, one of the fastest available models.
 - **Developer-First**: Simple Python SDK via [MuAPI](https://muapi.ai) infrastructure.
 
-## 🌟 Key Features of HappyHorse 1.0 API
+## 🌟 Key Features of HappyHorse 1.0 and Happy Horse 1.1 API
 
 - ✅ **Text-to-Video (T2V) — 1080p** — `POST /api/v1/happy-horse-1-text-to-video-1080p`.
 - ✅ **Text-to-Video (T2V) — 720p** — `POST /api/v1/happy-horse-1-text-to-video-720p` (~half the 1080p cost).
@@ -90,7 +87,7 @@ MUAPI_API_KEY=your_muapi_api_key_here
 
 ---
 
-## 🤖 HappyHorse 1.0 MCP Server
+## 🤖 HappyHorse 1.0 and Happy Horse 1.1 MCP Server
 
 Use HappyHorse 1.0 as an **MCP (Model Context Protocol)** server, allowing AI assistants like Claude Desktop or Cursor to directly invoke HappyHorse generation tools.
 
@@ -107,7 +104,7 @@ Use HappyHorse 1.0 as an **MCP (Model Context Protocol)** server, allowing AI as
 
 ---
 
-## 💻 Quick Start with HappyHorse 1.0 API (Python)
+## 💻 Quick Start with HappyHorse 1.0 and Happy Horse 1.1 API (Python)
 
 ```python
 from happyhorse_api import HappyHorseAPI
